@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 class ViewController: UIViewController {
     
@@ -17,6 +18,7 @@ class ViewController: UIViewController {
     var timer = Timer()
     var totalTime = 0
     var timePassed = 0
+    var audioPlayer = AVAudioPlayer()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,10 +29,12 @@ class ViewController: UIViewController {
         
         totalTime = eggTime[hardness]!
         timePassed = 0
-        labelKondisi.text = "How do you like your eggs?"
+        labelKondisi.text = hardness
         timer.invalidate()
+        audioPlayer.stop()
         
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
+
     }
     
     @objc func updateTimer() {
@@ -43,6 +47,16 @@ class ViewController: UIViewController {
             print(progressBar.progress)
         } else {
             labelKondisi.text = "Done!"
+            
+            playSound(sound: "alarm_sound")
         }
+    }
+    
+    func playSound(sound: String) {
+        let soundURL = Bundle.main.url(forResource: sound, withExtension: "mp3")
+        
+        audioPlayer = try! AVAudioPlayer(contentsOf: soundURL!)
+                
+        audioPlayer.play()
     }
 }
